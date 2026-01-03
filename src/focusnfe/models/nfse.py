@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import Field
+from pydantic import Field, field_validator, model_validator
 
 from .common import FocusNFeBaseModel
 
@@ -13,6 +13,11 @@ class NFSePrestador(FocusNFeBaseModel):
     cnpj: str = Field(..., description="CNPJ of the service provider")
     inscricao_municipal: str = Field(..., description="Municipal registration of the provider")
     codigo_municipio: str = Field(..., description="7-digit IBGE code of the provider's city")
+
+    @field_validator("cnpj")
+    @classmethod
+    def validate_cnpj(cls, v: str) -> str:
+        return cls.validate_cnpj_value(v)
 
 
 class NFSeTomadorEndereco(FocusNFeBaseModel):
@@ -39,6 +44,24 @@ class NFSeTomador(FocusNFeBaseModel):
     razao_social: str = Field(..., description="Name or company name of the taker")
     email: str | None = Field(None, description="Email for sending the NFSe")
     endereco: NFSeTomadorEndereco = Field(..., description="Address details of the taker")
+
+    @field_validator("cpf")
+    @classmethod
+    def validate_cpf(cls, v: str | None) -> str | None:
+        return cls.validate_cpf_value(v)
+
+    @field_validator("cnpj")
+    @classmethod
+    def validate_cnpj(cls, v: str | None) -> str | None:
+        return cls.validate_cnpj_value(v)
+
+    @model_validator(mode="after")
+    def validate_identifiers(self) -> "NFSeTomador":
+        if self.cpf and self.cnpj:
+            raise ValueError("Only one of 'cpf' or 'cnpj' can be defined, not both.")
+        if not self.cpf and not self.cnpj:
+            raise ValueError("One of 'cpf' or 'cnpj' must be defined.")
+        return self
 
 
 class NFSeServico(FocusNFeBaseModel):
@@ -83,6 +106,12 @@ class NFSeResponse(FocusNFeBaseModel):
     status: str = Field(..., description="Status of the NFSe (e.g., processando_autorizacao, autorizado, erro)")
     ref: str | None = Field(None, description="Unique reference provided in the request")
     cnpj_prestador: str | None = Field(None, description="Provider's CNPJ")
+
+    @field_validator("cnpj_prestador")
+    @classmethod
+    def validate_cnpj_prestador(cls, v: str | None) -> str | None:
+        return cls.validate_cnpj_value(v)
+
     numero: str | None = Field(None, description="Official NFSe number")
     codigo_verificacao: str | None = Field(None, description="Verification code for authenticity")
     data_emissao: str | None = Field(None, description="Date and time of issuance")

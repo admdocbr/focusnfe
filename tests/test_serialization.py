@@ -14,8 +14,9 @@ def test_nfse_date_serialization(requests_mock):
         "data_emissao": data_emissao,
         "natureza_operacao": "1",
         "optante_simples_nacional": True,
-        "prestador": {"cnpj": "12345678000101", "inscricao_municipal": "123456", "codigo_municipio": "3550308"},
+        "prestador": {"cnpj": "00000000000191", "inscricao_municipal": "123456", "codigo_municipio": "3550308"},
         "tomador": {
+            "cpf": "52998224725",
             "razao_social": "Test Customer",
             "endereco": {
                 "logradouro": "Street",
@@ -51,8 +52,9 @@ def test_nfse_model_date_serialization(requests_mock):
         data_emissao=data_emissao,
         natureza_operacao="1",
         optante_simples_nacional=True,
-        prestador={"cnpj": "12345678000101", "inscricao_municipal": "123456", "codigo_municipio": "3550308"},
+        prestador={"cnpj": "00000000000191", "inscricao_municipal": "123456", "codigo_municipio": "3550308"},
         tomador={
+            "cpf": "52998224725",
             "razao_social": "Test Customer",
             "endereco": {
                 "logradouro": "Street",

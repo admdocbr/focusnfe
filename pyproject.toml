@@ -11,6 +11,7 @@ requires-python = ">=3.11"
 dependencies = [
     "pydantic>=2.12.5",
     "requests>=2.32.5",
+    "validate-docbr>=1.11.1",
 ]
 
 [build-system]
