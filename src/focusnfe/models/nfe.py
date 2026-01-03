@@ -4,6 +4,12 @@ from .common import FocusNFeBaseModel
 
 
 class NFeResponse(FocusNFeBaseModel):
+    """
+    Schema for NF-e (Product Invoice) responses.
+
+    Contains authorization details, SEFAZ status, and DANFE/XML URLs.
+    """
+
     status: str = Field(..., description="Current status of the NF-e (e.g., autorizado, processando, erro)")
     status_sefaz: str | None = Field(None, description="Status code returned by SEFAZ")
     mensagem_sefaz: str | None = Field(None, description="Detailed message returned by SEFAZ")
