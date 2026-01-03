@@ -41,9 +41,9 @@ class NFSeTomador(FocusNFeBaseModel):
 
     cpf: str | None = Field(None, description="CPF of the taker (if person)")
     cnpj: str | None = Field(None, description="CNPJ of the taker (if company)")
-    razao_social: str = Field(..., description="Name or company name of the taker")
+    razao_social: str | None = Field(None, description="Name or company name of the taker", max_length=115)
     email: str | None = Field(None, description="Email for sending the NFSe")
-    endereco: NFSeTomadorEndereco = Field(..., description="Address details of the taker")
+    endereco: NFSeTomadorEndereco | None = Field(None, description="Address details of the taker")
 
     @field_validator("cpf")
     @classmethod
