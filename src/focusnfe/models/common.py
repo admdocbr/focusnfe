@@ -1,6 +1,9 @@
 from pydantic import BaseModel, ConfigDict, Field
 from validate_docbr import CNPJ, CPF
 
+cpf_validator = CPF()
+cnpj_validator = CNPJ()
+
 
 class FocusNFeBaseModel(BaseModel):
     """
@@ -16,8 +19,8 @@ class FocusNFeBaseModel(BaseModel):
         if v is None:
             return v
         # Remove common separators before validation
-        clean_v = v.replace(".", "").replace("-", "")
-        if not CPF().validate(clean_v):
+        clean_v = v.replace(".", "").replace("-", "").strip()
+        if not cpf_validator.validate(clean_v):
             raise ValueError(f"Invalid CPF: {v}")
         return clean_v
 
@@ -26,8 +29,8 @@ class FocusNFeBaseModel(BaseModel):
         if v is None:
             return v
         # Remove common separators before validation
-        clean_v = v.replace(".", "").replace("-", "").replace("/", "")
-        if not CNPJ().validate(clean_v):
+        clean_v = v.replace(".", "").replace("-", "").replace("/", "").strip()
+        if not cnpj_validator.validate(clean_v):
             raise ValueError(f"Invalid CNPJ: {v}")
         return clean_v
 
