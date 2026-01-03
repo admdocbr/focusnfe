@@ -33,7 +33,7 @@ class NFSeServico(FocusNFeBaseModel):
     valor_servicos: float = Field(..., description="Total value of the service")
     item_lista_servico: str = Field(..., description="LC 116/2003 service item code (e.g., 1.05)")
     discriminacao: str = Field(..., description="Detailed description of the service")
-    codigo_municipio: str | None = Field(None, description="IBGE code where the service was provided")
+    codigo_municipio: str = Field(..., description="IBGE code where the service was provided")
     aliquota: float | None = Field(None, description="ISS tax rate percentage")
     iss_retido: bool | None = Field(False, description="Whether ISS is withheld by the taker")
     valor_pis: float | None = Field(None, description="PIS tax amount")
@@ -47,7 +47,7 @@ class NFSeServico(FocusNFeBaseModel):
 
 
 class NFSeRequest(FocusNFeBaseModel):
-    data_emissao: datetime | None = Field(None, description="Date and time of issuance in ISO 8061 format")
+    data_emissao: datetime | None = Field(None, description="Date and time of issuance in ISO 8601 format")
     natureza_operacao: str = Field(..., description="Nature of the operation (e.g., 1 for Tributação no município)")
     optante_simples_nacional: bool = Field(..., description="Whether the company is opted for Simples Nacional")
     prestador: NFSePrestador = Field(..., description="Provider details")
