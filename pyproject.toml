@@ -1,7 +1,7 @@
 [project]
 name = "focusnfe"
 version = "0.1.0"
-description = "Add your description here"
+description = "A robust, type-safe Python library for interacting with FocusNFe services."
 readme = "README.md"
 license = { text = "MIT" }
 authors = [
