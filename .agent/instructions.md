@@ -8,16 +8,20 @@ This document provides context and rules for AI agents working on this repositor
 - **Core Libraries**: `pydantic` (v2), `requests`
 - **Testing**: `pytest`, `pytest-cov`, `requests-mock`, `ruff`
 - **CI/CD**: GitHub Actions (defined in `.github/workflows/`)
+- **Lifecycle**: `pre-commit` hooks, `dependabot` (weekly)
 
 ## Project Rules
 1. **Pydantic Models**: 
     - Always use `FocusNFeBaseModel` (from `focusnfe.models.common`) as the base class.
     - Every field MUST have a `pydantic.Field` with a clear, descriptive `description`.
     - Use `populate_by_name=True` (configured in the base model).
+    - Favor modern Python type hints (e.g., `list[T]`, `dict[K, V]`, `X | Y`) over `typing` aliases where possible (supported in Python 3.11+).
 2. **API Client**:
     - Inherit from `BaseClient` in `focusnfe.base`.
     - Use `requests.Session` for all calls.
     - Return Pydantic models whenever possible.
+    - **Date Handling**: The client uses a custom `FocusNFeJSONEncoder` that automatically converts `date` and `datetime` objects to ISO 8601 strings.
+    - **Error Handling**: `FocusNFeError` provides detailed messages including status codes and nested API error lists (if available).
 3. **Test Coverage**:
     - Maintain **100% code coverage**.
     - Use `requests-mock` to isolate tests from the real API.
@@ -31,3 +35,4 @@ This document provides context and rules for AI agents working on this repositor
 - Auto-fix/Format: `uv run ruff check --fix .` and `uv run ruff format .`
 - Build package: `uv build`
 - Sync dependencies: `uv sync`
+- Update pre-commit: `pre-commit autoupdate`
