@@ -125,14 +125,14 @@ Contains authorization details, SEFAZ status, and DANFE/XML URLs.
 | Field | Type | Description |
 | :--- | :--- | :--- |
 | `status` | `str` | Current status of the NF-e (e.g., autorizado, processando, erro) |
-| `status_sefaz` | `str | None` | Status code returned by SEFAZ |
-| `mensagem_sefaz` | `str | None` | Detailed message returned by SEFAZ |
-| `chave_nfe` | `str | None` | Unique access key of the NF-e |
-| `numero` | `str | None` | Number of the NF-e |
-| `serie` | `str | None` | Series of the NF-e |
-| `url_pdf` | `str | None` | URL to download the PDF (DANFE) |
-| `url_xml` | `str | None` | URL to download the XML |
-| `protocolo` | `str | None` | Authorization protocol number |
-| `caminho_xml_nota_fiscal` | `str | None` | Path to the XML file |
+| `status_sefaz` | `str \| None` | Status code returned by SEFAZ |
+| `mensagem_sefaz` | `str \| None` | Detailed message returned by SEFAZ |
+| `chave_nfe` | `str \| None` | Unique access key of the NF-e |
+| `numero` | `str \| None` | Number of the NF-e |
+| `serie` | `str \| None` | Series of the NF-e |
+| `url_pdf` | `str \| None` | URL to download the PDF (DANFE) |
+| `url_xml` | `str \| None` | URL to download the XML |
+| `protocolo` | `str \| None` | Authorization protocol number |
+| `caminho_xml_nota_fiscal` | `str \| None` | Path to the XML file |
 
 <!-- API_DOCS_END -->

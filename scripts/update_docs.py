@@ -60,7 +60,11 @@ def extract_section(markdown, header):
         return ""
 
     # Find next header of same or higher level
-    header_level = len(re.match(r"^#+", lines[start_idx]).group())
+    match = re.match(r"^#+", lines[start_idx])
+    if not match:
+        # Not a valid markdown header line
+        return ""
+    header_level = len(match.group())
 
     section_lines = [lines[start_idx]]
     for line in lines[start_idx + 1 :]:
@@ -97,7 +101,9 @@ def get_model_docs(model_class):
             type_hint = type_hint.split(".")[-1]
 
         description = field.description or "-"
-        lines.append(f"| `{field_name}` | `{type_hint}` | {description} |")
+        # Escape pipes in type hints to prevent markdown table column issues
+        type_cell = type_hint.replace("|", "\\|")
+        lines.append(f"| `{field_name}` | `{type_cell}` | {description} |")
 
     return "\n".join(lines)
 
