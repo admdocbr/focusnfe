@@ -1,6 +1,21 @@
 import re
 import subprocess
+import sys
 from pathlib import Path
+
+# Add src to path so we can import models
+root = Path(__file__).parent.parent
+sys.path.append(str(root / "src"))
+
+from focusnfe.models.nfe import NFeResponse  # noqa: E402
+from focusnfe.models.nfse import (  # noqa: E402
+    NFSePrestador,
+    NFSeRequest,
+    NFSeResponse,
+    NFSeServico,
+    NFSeTomador,
+    NFSeTomadorEndereco,
+)
 
 
 def get_api_docs(module_name):
@@ -57,14 +72,41 @@ def extract_section(markdown, header):
     return "\n".join(section_lines)
 
 
+def get_model_docs(model_class):
+    """Generate markdown documentation for a Pydantic model including its fields."""
+    name = model_class.__name__
+    doc = model_class.__doc__ or ""
+
+    lines = [f"#### `{name}`", f"{doc.strip()}\n"]
+    lines.append("| Field | Type | Description |")
+    lines.append("| :--- | :--- | :--- |")
+
+    for field_name, field in model_class.model_fields.items():
+        # Get simplified type name
+        annotation = field.annotation
+        type_hint = str(annotation).replace("typing.", "").replace("NoneType", "None")
+
+        # Handle Union types (like str | None)
+        type_hint = type_hint.replace("Union[", "").replace("]", "").replace(", ", " | ")
+
+        # Handle basic classes
+        if "<class '" in type_hint:
+            type_hint = type_hint.split("'")[1].split(".")[-1]
+
+        if "focusnfe.models" in type_hint:
+            type_hint = type_hint.split(".")[-1]
+
+        description = field.description or "-"
+        lines.append(f"| `{field_name}` | `{type_hint}` | {description} |")
+
+    return "\n".join(lines)
+
+
 def main():
-    root = Path(__file__).parent.parent
     docs_dir = root / "docs"
 
     # Generate full API docs template
     full_docs = get_api_docs("focusnfe.client")
-    model_nfse_docs = get_api_docs("focusnfe.models.nfse")
-    model_nfe_docs = get_api_docs("focusnfe.models.nfe")
 
     # --- Update NF-e Docs ---
     nfe_content = []
@@ -73,7 +115,7 @@ def main():
     nfe_content.append(extract_section(full_docs, "#### get\\_nfe"))
     nfe_content.append(extract_section(full_docs, "#### cancel\\_nfe"))
     nfe_content.append("\n### Models\n")
-    nfe_content.append(extract_section(model_nfe_docs, "## NFeResponse Objects"))
+    nfe_content.append(get_model_docs(NFeResponse))
 
     update_file(docs_dir / "nfe.md", "\n\n".join(nfe_content))
 
@@ -84,12 +126,12 @@ def main():
     nfse_content.append(extract_section(full_docs, "#### get\\_nfse"))
     nfse_content.append(extract_section(full_docs, "#### cancel\\_nfse"))
     nfse_content.append("\n### Models\n")
-    nfse_content.append(extract_section(model_nfse_docs, "## NFSeRequest Objects"))
-    nfse_content.append(extract_section(model_nfse_docs, "## NFSeResponse Objects"))
-    nfse_content.append(extract_section(model_nfse_docs, "## NFSePrestador Objects"))
-    nfse_content.append(extract_section(model_nfse_docs, "## NFSeTomador Objects"))
-    nfse_content.append(extract_section(model_nfse_docs, "## NFSeTomadorEndereco Objects"))
-    nfse_content.append(extract_section(model_nfse_docs, "## NFSeServico Objects"))
+    nfse_content.append(get_model_docs(NFSeRequest))
+    nfse_content.append(get_model_docs(NFSeResponse))
+    nfse_content.append(get_model_docs(NFSePrestador))
+    nfse_content.append(get_model_docs(NFSeTomador))
+    nfse_content.append(get_model_docs(NFSeTomadorEndereco))
+    nfse_content.append(get_model_docs(NFSeServico))
 
     update_file(docs_dir / "nfse.md", "\n\n".join(nfse_content))
 
