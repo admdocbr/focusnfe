@@ -1,15 +1,25 @@
+from datetime import datetime
+
 from pydantic import Field
 
 from .common import FocusNFeBaseModel
 
 
 class NFSePrestador(FocusNFeBaseModel):
+    """
+    Service Provider details for NFS-e.
+    """
+
     cnpj: str = Field(..., description="CNPJ of the service provider")
     inscricao_municipal: str = Field(..., description="Municipal registration of the provider")
     codigo_municipio: str = Field(..., description="7-digit IBGE code of the provider's city")
 
 
 class NFSeTomadorEndereco(FocusNFeBaseModel):
+    """
+    Address details for the service taker (customer).
+    """
+
     logradouro: str = Field(..., description="Street name/Address")
     numero: str = Field(..., description="Address number")
     bairro: str = Field(..., description="Neighborhood/Bairro")
@@ -20,6 +30,10 @@ class NFSeTomadorEndereco(FocusNFeBaseModel):
 
 
 class NFSeTomador(FocusNFeBaseModel):
+    """
+    Service Taker (Customer) details for NFS-e.
+    """
+
     cpf: str | None = Field(None, description="CPF of the taker (if person)")
     cnpj: str | None = Field(None, description="CNPJ of the taker (if company)")
     razao_social: str = Field(..., description="Name or company name of the taker")
@@ -28,23 +42,32 @@ class NFSeTomador(FocusNFeBaseModel):
 
 
 class NFSeServico(FocusNFeBaseModel):
+    """
+    Service details, including tax information and values.
+    """
+
     valor_servicos: float = Field(..., description="Total value of the service")
     item_lista_servico: str = Field(..., description="LC 116/2003 service item code (e.g., 1.05)")
     discriminacao: str = Field(..., description="Detailed description of the service")
     codigo_municipio: str = Field(..., description="IBGE code where the service was provided")
     aliquota: float | None = Field(None, description="ISS tax rate percentage")
     iss_retido: bool | None = Field(False, description="Whether ISS is withheld by the taker")
-    valor_pis: float | None = Field(0.0, description="PIS tax amount")
-    valor_cofins: float | None = Field(0.0, description="COFINS tax amount")
-    valor_inss: float | None = Field(0.0, description="INSS tax amount")
-    valor_ir: float | None = Field(0.0, description="IR (Income Tax) amount")
-    valor_csll: float | None = Field(0.0, description="CSLL tax amount")
-    outras_retencoes: float | None = Field(0.0, description="Other tax retentions")
-    desconto_incondicionado: float | None = Field(0.0, description="Unconditional discount")
-    desconto_condicionado: float | None = Field(0.0, description="Conditional discount")
+    valor_pis: float | None = Field(None, description="PIS tax amount")
+    valor_cofins: float | None = Field(None, description="COFINS tax amount")
+    valor_inss: float | None = Field(None, description="INSS tax amount")
+    valor_ir: float | None = Field(None, description="IR (Income Tax) amount")
+    valor_csll: float | None = Field(None, description="CSLL tax amount")
+    outras_retencoes: float | None = Field(None, description="Other tax retentions")
+    desconto_incondicionado: float | None = Field(None, description="Unconditional discount")
+    desconto_condicionado: float | None = Field(None, description="Conditional discount")
 
 
 class NFSeRequest(FocusNFeBaseModel):
+    """
+    Request schema for issuing a new NFS-e.
+    """
+
+    data_emissao: datetime | None = Field(None, description="Date and time of issuance in ISO 8601 format")
     natureza_operacao: str = Field(..., description="Nature of the operation (e.g., 1 for Tributação no município)")
     optante_simples_nacional: bool = Field(..., description="Whether the company is opted for Simples Nacional")
     prestador: NFSePrestador = Field(..., description="Provider details")
@@ -53,6 +76,10 @@ class NFSeRequest(FocusNFeBaseModel):
 
 
 class NFSeResponse(FocusNFeBaseModel):
+    """
+    Response schema for NFS-e creation or consultation.
+    """
+
     status: str = Field(..., description="Status of the NFSe (e.g., processando_autorizacao, autorizado, erro)")
     ref: str | None = Field(None, description="Unique reference provided in the request")
     cnpj_prestador: str | None = Field(None, description="Provider's CNPJ")

@@ -47,6 +47,92 @@ response = client.cancel_nfe(reference="my_ref_001", justification="Justication 
 print(f"Status: {response.status}")
 ```
 
-## Models
+## API Reference
 
-We use Pydantic models to validate the responses. The main response model is `NFeResponse`.
+<!-- API_DOCS_START -->
+
+### Client Methods
+
+
+#### create\_nfe
+
+```python
+def create_nfe(reference: str, nfe_data: dict[str, Any]) -> NFeResponse
+```
+
+Issue a new NF-e (Product Invoice).
+
+**Arguments**:
+
+- `reference`: Unique internal reference for the invoice.
+- `nfe_data`: Dictionary containing NF-e data according to FocusNFe API.
+
+**Returns**:
+
+An NFeResponse model instance.
+
+<a id="focusnfe.client.FocusNFe.get_nfe"></a>
+
+
+#### get\_nfe
+
+```python
+def get_nfe(reference: str) -> NFeResponse
+```
+
+Consult an existing NF-e by its internal reference.
+
+**Arguments**:
+
+- `reference`: The unique reference provided during creation.
+
+**Returns**:
+
+An NFeResponse model instance.
+
+<a id="focusnfe.client.FocusNFe.cancel_nfe"></a>
+
+
+#### cancel\_nfe
+
+```python
+def cancel_nfe(reference: str, justification: str) -> NFeResponse
+```
+
+Cancel an authorized NF-e.
+
+**Arguments**:
+
+- `reference`: The unique reference of the invoice.
+- `justification`: Justification for cancellation (min 15 chars).
+
+**Returns**:
+
+An NFeResponse model instance.
+
+<a id="focusnfe.client.FocusNFe.create_nfse"></a>
+
+
+
+### Models
+
+
+#### `NFeResponse`
+Schema for NF-e (Product Invoice) responses.
+
+Contains authorization details, SEFAZ status, and DANFE/XML URLs.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `status` | `str` | Current status of the NF-e (e.g., autorizado, processando, erro) |
+| `status_sefaz` | `str \| None` | Status code returned by SEFAZ |
+| `mensagem_sefaz` | `str \| None` | Detailed message returned by SEFAZ |
+| `chave_nfe` | `str \| None` | Unique access key of the NF-e |
+| `numero` | `str \| None` | Number of the NF-e |
+| `serie` | `str \| None` | Series of the NF-e |
+| `url_pdf` | `str \| None` | URL to download the PDF (DANFE) |
+| `url_xml` | `str \| None` | URL to download the XML |
+| `protocolo` | `str \| None` | Authorization protocol number |
+| `caminho_xml_nota_fiscal` | `str \| None` | Path to the XML file |
+
+<!-- API_DOCS_END -->

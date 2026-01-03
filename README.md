@@ -44,6 +44,10 @@ For detailed examples and model information for each service, see:
 uv run pytest --cov=src/focusnfe tests/
 ```
 
+### Releasing New Versions
+
+For information on how to release new versions of this library, see the [Release Guide](docs/RELEASE.md).
+
 ### Project Structure
 
 - `src/focusnfe/client.py`: Main client class.

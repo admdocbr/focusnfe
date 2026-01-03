@@ -8,4 +8,7 @@ wheels/
 
 # Virtual environments
 .venv
+
+# lint & stuff
 .coverage
+interrogate_badge.svg
