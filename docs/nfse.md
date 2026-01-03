@@ -188,9 +188,9 @@ Service Taker (Customer) details for NFS-e.
 | :--- | :--- | :--- |
 | `cpf` | `str \| None` | CPF of the taker (if person) |
 | `cnpj` | `str \| None` | CNPJ of the taker (if company) |
-| `razao_social` | `str` | Name or company name of the taker |
+| `razao_social` | `str \| None` | Name or company name of the taker |
 | `email` | `str \| None` | Email for sending the NFSe |
-| `endereco` | `NFSeTomadorEndereco` | Address details of the taker |
+| `endereco` | `NFSeTomadorEndereco \| None` | Address details of the taker |
 
 #### `NFSeTomadorEndereco`
 Address details for the service taker (customer).
