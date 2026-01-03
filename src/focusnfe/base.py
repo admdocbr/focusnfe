@@ -1,3 +1,5 @@
+import json
+from datetime import date, datetime
 from typing import Any, TypeVar
 
 import requests
@@ -10,9 +12,32 @@ class FocusNFeError(Exception):
     """Base exception for FocusNFe library"""
 
     def __init__(self, message: str, status_code: int | None = None, response: dict[str, Any] | None = None):
-        super().__init__(message)
+        self.message = message
         self.status_code = status_code
         self.response = response
+        super().__init__(self.message)
+
+    def __str__(self):
+        msg = f"[{self.status_code}] {self.message}" if self.status_code else self.message
+        if self.response and "erros" in self.response:
+            extra_errors = []
+            for error in self.response["erros"]:
+                code = error.get("codigo")
+                message = error.get("mensagem")
+                if code and message:
+                    extra_errors.append(f" - {code}: {message}")
+                elif message:
+                    extra_errors.append(f" - {message}")
+            if extra_errors:
+                msg += "\nDetails:\n" + "\n".join(extra_errors)
+        return msg
+
+
+class FocusNFeJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        return super().default(obj)
 
 
 class BaseClient:
@@ -36,7 +61,13 @@ class BaseClient:
         url = f"{self.base_url}{path}"
 
         try:
-            response = self.session.request(method=method, url=url, params=params, json=json_data, timeout=30)
+            # Handle JSON serialization manually if json_data is present to support date/datetime
+            kwargs = {"method": method, "url": url, "params": params, "timeout": 30}
+            if json_data is not None:
+                kwargs["data"] = json.dumps(json_data, cls=FocusNFeJSONEncoder)
+                kwargs["headers"] = {"Content-Type": "application/json"}
+
+            response = self.session.request(**kwargs)
 
             response_json = {}
             if response.content:
