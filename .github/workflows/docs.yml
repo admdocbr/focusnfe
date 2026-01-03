@@ -25,5 +25,16 @@ jobs:
       - name: Install dependencies
         run: uv sync --all-extras --dev
 
+      - name: Run docstring sync
+        run: uv run python scripts/update_docs.py
+
+      - name: Check for doc alterations
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Documentation is out of sync with docstrings. Please run 'python scripts/update_docs.py' and commit the changes."
+            git diff
+            exit 1
+          fi
+
       - name: Run interrogate
         run: uv run interrogate src/focusnfe

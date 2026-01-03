@@ -75,8 +75,135 @@ response = client.cancel_nfse(reference="ref_001")
 print(f"Status: {response.status}")
 ```
 
-## Models
+## API Reference
 
-We use Pydantic models to validate both requests and responses.
-- `NFSeRequest`: Validation for emission.
-- `NFSeResponse`: Validation for the API response.
+<!-- API_DOCS_START -->
+
+### Client Methods
+
+
+#### create\_nfse
+
+```python
+def create_nfse(reference: str,
+                nfse_data: dict[str, Any] | NFSeRequest) -> NFSeResponse
+```
+
+Issue a new NFS-e (Service Invoice).
+
+**Arguments**:
+
+- `reference`: Unique internal reference for the invoice.
+- `nfse_data`: Dictionary or NFSeRequest model containing NFS-e data.
+
+**Returns**:
+
+An NFSeResponse model instance.
+
+<a id="focusnfe.client.FocusNFe.get_nfse"></a>
+
+
+#### get\_nfse
+
+```python
+def get_nfse(reference: str) -> NFSeResponse
+```
+
+Consult an existing NFS-e by its internal reference.
+
+**Arguments**:
+
+- `reference`: The unique reference provided during creation.
+
+**Returns**:
+
+An NFSeResponse model instance.
+
+<a id="focusnfe.client.FocusNFe.cancel_nfse"></a>
+
+
+#### cancel\_nfse
+
+```python
+def cancel_nfse(reference: str) -> NFSeResponse
+```
+
+Cancel an authorized NFS-e.
+
+**Arguments**:
+
+- `reference`: The unique reference of the invoice.
+
+**Returns**:
+
+An NFSeResponse model instance.
+
+
+
+### Models
+
+
+## NFSeRequest Objects
+
+```python
+class NFSeRequest(FocusNFeBaseModel)
+```
+
+Request schema for issuing a new NFS-e.
+
+<a id="focusnfe.models.nfse.NFSeResponse"></a>
+
+
+## NFSeResponse Objects
+
+```python
+class NFSeResponse(FocusNFeBaseModel)
+```
+
+Response schema for NFS-e creation or consultation.
+
+
+## NFSePrestador Objects
+
+```python
+class NFSePrestador(FocusNFeBaseModel)
+```
+
+Service Provider details for NFS-e.
+
+<a id="focusnfe.models.nfse.NFSeTomadorEndereco"></a>
+
+
+## NFSeTomador Objects
+
+```python
+class NFSeTomador(FocusNFeBaseModel)
+```
+
+Service Taker (Customer) details for NFS-e.
+
+<a id="focusnfe.models.nfse.NFSeServico"></a>
+
+
+## NFSeTomadorEndereco Objects
+
+```python
+class NFSeTomadorEndereco(FocusNFeBaseModel)
+```
+
+Address details for the service taker (customer).
+
+<a id="focusnfe.models.nfse.NFSeTomador"></a>
+
+
+## NFSeServico Objects
+
+```python
+class NFSeServico(FocusNFeBaseModel)
+```
+
+Service details, including tax information and values.
+
+<a id="focusnfe.models.nfse.NFSeRequest"></a>
+
+<!-- API_DOCS_END -->

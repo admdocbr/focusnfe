@@ -20,6 +20,7 @@ build-backend = "uv_build"
 [dependency-groups]
 dev = [
     "interrogate>=1.7.0",
+    "pydoc-markdown>=4.8.2",
     "pytest>=9.0.2",
     "pytest-cov>=7.0.0",
     "requests-mock>=1.12.1",
