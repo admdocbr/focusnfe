@@ -14,9 +14,9 @@ def sample_nfse_data():
     return {
         "natureza_operacao": "1",
         "optante_simples_nacional": True,
-        "prestador": {"cnpj": "12345678000101", "inscricao_municipal": "123456", "codigo_municipio": "3550308"},
+        "prestador": {"cnpj": "00000000000191", "inscricao_municipal": "123456", "codigo_municipio": "3550308"},
         "tomador": {
-            "cnpj": "98765432000101",
+            "cnpj": "00000000000191",
             "razao_social": "Test Customer",
             "endereco": {
                 "logradouro": "Test Street",
@@ -37,7 +37,7 @@ def sample_nfse_data():
 
 
 def test_create_nfse_success(client, requests_mock, sample_nfse_data):
-    mock_response = {"status": "processando_autorizacao", "ref": "ref123", "cnpj_prestador": "12345678000101"}
+    mock_response = {"status": "processando_autorizacao", "ref": "ref123", "cnpj_prestador": "00000000000191"}
     requests_mock.post(f"{client.SANDBOX_URL}/nfse?ref=ref123", json=mock_response, status_code=201)
 
     response = client.create_nfse("ref123", sample_nfse_data)

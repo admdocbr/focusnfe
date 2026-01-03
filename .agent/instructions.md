@@ -12,6 +12,11 @@ This document provides context and rules for AI agents working on this repositor
 - **Lifecycle**: `pre-commit` hooks, `dependabot` (weekly)
 
 ## Project Rules
+0. **Tooling**:
+    - ALWAYS use `uv run` to execute scripts, tests, or tools (e.g., `pytest`, `ruff`, `interrogate`).
+    - Use `uv sync` for dependency management.
+    - Never call tools directly (e.g., `pytest`) without the `uv run` prefix unless `uv` is not applicable.
+
 1. **Pydantic Models**: 
     - Always use `FocusNFeBaseModel` (from `focusnfe.models.common`) as the base class.
     - Every field MUST have a `pydantic.Field` with a clear, descriptive `description`.
